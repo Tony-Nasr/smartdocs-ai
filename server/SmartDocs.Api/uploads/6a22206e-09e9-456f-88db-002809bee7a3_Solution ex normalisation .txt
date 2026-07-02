@@ -1,0 +1,59 @@
+1. Dépendances fonctionnelles redondantes
+
+Les dépendances fonctionnelles sont :
+
+• Code_Cours → Professeur
+
+• Heure, Salle → Code_Cours
+
+• Heure, Professeur → Salle
+
+• Heure, Étudiant → Salle
+
+• Code_Cours, Étudiant → Note
+
+Une dépendance fonctionnelle est redondante si elle peut être dérivée des autres. Ici, la dépendance (Heure, Professeur → Salle) peut être vue comme une conséquence de (Heure, Salle → Code_Cours) et (Code_Cours → Professeur). Si nous connaissons le Code_Cours donné une Heure et une Salle, alors nous connaissons le Professeur, ce qui peut nous amener à trouver Salle. Cette dépendance peut donc être redondante.
+
+2. Clé de la relation
+
+Une clé candidate est un ensemble d'attributs qui permet d'identifier de manière unique chaque tuple de la relation.
+
+On analyse les dépendances :
+
+• Code_Cours seul ne suffit pas car il ne détermine pas Heure, Salle et Étudiant.
+
+• (Heure, Salle) permet de trouver Code_Cours, puis Professeur.
+
+• (Code_Cours, Étudiant) permet de trouver Note.
+
+La combinaison minimale qui permet d'obtenir tous les attributs est (Heure, Salle, Étudiant). Il s'agit donc d'une clé candidate.
+
+3. Forme normale de la relation
+
+• 1NF : La relation est en 1NF si toutes les valeurs sont atomiques. C'est le cas ici.
+
+• 2NF : La relation est en 2NF si elle est en 1NF et que chaque attribut non clé est totalement dépendant de la clé. Ici, Professeur dépend uniquement de Code_Cours, qui est une partie de la clé (Heure, Salle, Étudiant), donc il y a une violation de la 2NF.
+
+• 3NF : La relation n'est pas en 3NF car Professeur dépend uniquement de Code_Cours et pas directement de la clé primaire.
+
+• BCNF : Une relation est en BCNF si toutes ses dépendances fonctionnelles ont une clé comme déterminant. Or, ici, Code_Cours → Professeur viole la BCNF car Code_Cours n'est pas une clé.
+
+Conclusion : La relation n'est pas en BCNF et nécessite une décomposition.
+
+4. Décomposition en BCNF
+
+On décompose la relation en plusieurs relations respectant la BCNF :
+
+• Cours_Prof (Code_Cours, Professeur)
+
+• Pour représenter la dépendance Code_Cours → Professeur
+
+• Cours_Details (Heure, Salle, Code_Cours)
+
+• Pour capturer Heure, Salle → Code_Cours
+
+• Inscription (Code_Cours, Étudiant, Note)
+
+• Pour Code_Cours, Étudiant → Note
+
+Ces relations sont en BCNF, car chaque dépendance fonctionnelle a une clé comme déterminant.
