@@ -115,3 +115,4 @@ C:\Users\DYNABOOK\Projects\smartdocs-ai\server\SmartDocs.Api\obj\Debug\net8.0\re
 C:\Users\DYNABOOK\Projects\smartdocs-ai\server\SmartDocs.Api\obj\Debug\net8.0\SmartDocs.Api.pdb
 C:\Users\DYNABOOK\Projects\smartdocs-ai\server\SmartDocs.Api\obj\Debug\net8.0\SmartDocs.Api.genruntimeconfig.cache
 C:\Users\DYNABOOK\Projects\smartdocs-ai\server\SmartDocs.Api\obj\Debug\net8.0\ref\SmartDocs.Api.dll
+C:\Users\DYNABOOK\Projects\smartdocs-ai\server\SmartDocs.Api\obj\Debug\net8.0\SmartDocs.Api.sourcelink.json

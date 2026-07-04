@@ -1,3 +1,0 @@
-This is a test document about software development.
-The project uses React and ASP.NET Core.
-The AI integration uses Google Gemini API.

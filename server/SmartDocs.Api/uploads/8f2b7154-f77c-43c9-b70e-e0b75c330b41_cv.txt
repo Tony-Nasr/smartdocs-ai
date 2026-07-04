@@ -1,0 +1,38 @@
+TONY NASR
+Software Engineer | Zalka, Lebanon | +961 78 983 766| naser.naser.201999@gmail.com| LinkedIn: Tony NASR
+PROFESSIONAL PROFILE (Full Stack Developer | Java & Web Applications)
+Computer Science Licence graduate with hands-on experience in .NET development and networking. Strong foundation in object-oriented programming, database systems, and network fundamentals. Motivated, detail-oriented, and ready to contribute effectively within professional technical teams.
+EDUCATION
+CONSERVATOIRE NATIONAL DES ARTS ET METIERS(CNAM) BAALBEK, LEBANON
+Bachelor of Science in Computer Science 10/2022 – 06/2025
+Software Engineering 09/2025 - Present
+PROFESSIONAL EXPERIENCE
+Tek-Sof (Hybrid) Dekwaneh, Beirut
+Software Engineer 10/2025 – 03/2026
+•
+Developed applications using C# and the .NET framework.
+•
+Applied OOP principles to ensure code quality and maintainability.
+•
+Implemented database operations and basic application logic.
+•
+Gained hands-on experience with Oracle Database , working on systems related to the insurance domain in the first month of my work.
+•
+Performed data transfer and migration tasks between databases, ensuring data integrity and consistency.
+FREELANCE (Remote) Bekaa, Lebanon
+Web Developer 01/2024 – 07/2025
+•
+Delivered front-end and back-end web solutions for multiple clients.
+•
+Designed responsive websites for e-commerce and company management.
+Electricity Assistant (On Site) Bekaa, Lebanon • Assisted an electrical engineer with the installation, maintenance, and troubleshooting of residential electrical systems. • Followed safety standards and site protocols to identify risks and ensure safe operations. • Supported fault diagnosis, repairs, and system efficiency improvements in coordination with the engineering team.
+TECHNICAL SKILLS
+Programming: C#, Java, Python, C, PL/SQL
+Frameworks: .NET, ReactJS
+Web: HTML, CSS, JavaScript, PHP, MySQL
+Concepts: OOP, Data Structures & Algorithms
+Networking: Network Fundamentals, Cyber Security
+SOFT SKILLS
+Communication ; Teamwork ; Time Management ; Problem Solving
+LANGUAGES
+Arabic (Native) ; English (Intermediate) ; French (Advanced - DELF B1 Certified, 2025)

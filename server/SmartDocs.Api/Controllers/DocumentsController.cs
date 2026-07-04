@@ -34,8 +34,32 @@ public class DocumentsController : ControllerBase
             .OrderByDescending(d => d.UploadedAt)
             .Select(d => new { d.Id, d.Title, d.FileType, d.Summary, d.Keywords, d.UploadedAt })
             .ToListAsync();
-
         return Ok(docs);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var doc = await _db.Documents
+            .Include(d => d.Chunks)
+            .Include(d => d.Messages)
+            .FirstOrDefaultAsync(d => d.Id == id && d.UserId == UserId);
+
+        if (doc == null) return NotFound();
+
+        // Delete physical file
+        try
+        {
+            var filePath = Path.Combine(_env.ContentRootPath, "uploads",
+                Path.GetFileName(doc.FileUrl));
+            if (System.IO.File.Exists(filePath))
+                System.IO.File.Delete(filePath);
+        }
+        catch { }
+
+        _db.Documents.Remove(doc);
+        await _db.SaveChangesAsync();
+        return Ok();
     }
 
     [HttpPost("upload")]
@@ -63,30 +87,29 @@ public class DocumentsController : ControllerBase
             UserId = UserId
         };
 
-        // AI analysis
-if (!string.IsNullOrWhiteSpace(text))
-{
-    try
-    {
-        var (summary, keywords) = await _ai.AnalyzeDocumentAsync(text);
-        doc.Summary = summary;
-        doc.Keywords = keywords;
+        if (!string.IsNullOrWhiteSpace(text))
+        {
+            try
+            {
+                var (summary, keywords) = await _ai.AnalyzeDocumentAsync(text);
+                doc.Summary = summary;
+                doc.Keywords = keywords;
 
-        foreach (var chunk in ChunkText(text, 3000))
-{
-    doc.Chunks.Add(new DocumentChunk
-    {
-        Content = chunk,
-        EmbeddingJson = "[]"
-    });
-}
-    }
-    catch (Exception ex)
-    {
-        doc.Summary = "AI analysis unavailable: " + ex.Message;
-        doc.Keywords = "";
-    }
-}
+                foreach (var chunk in ChunkText(text, 3000))
+                {
+                    doc.Chunks.Add(new DocumentChunk
+                    {
+                        Content = chunk,
+                        EmbeddingJson = "[]"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                doc.Summary = "AI analysis unavailable: " + ex.Message;
+                doc.Keywords = "";
+            }
+        }
 
         _db.Documents.Add(doc);
         await _db.SaveChangesAsync();
@@ -103,10 +126,10 @@ if (!string.IsNullOrWhiteSpace(text))
         if (doc == null) return NotFound();
 
         var words = question.ToLower().Split(' ');
-var topChunks = doc.Chunks
-    .OrderByDescending(c => words.Count(w => c.Content.ToLower().Contains(w)))
-    .Take(4)
-    .Select(c => c.Content);
+        var topChunks = doc.Chunks
+            .OrderByDescending(c => words.Count(w => c.Content.ToLower().Contains(w)))
+            .Take(4)
+            .Select(c => c.Content);
 
         var answer = await _ai.AnswerQuestionAsync(question, topChunks);
 
@@ -123,18 +146,6 @@ var topChunks = doc.Chunks
             yield return text.Substring(i, Math.Min(chunkSize, text.Length - i));
     }
 
-    private static float CosineSimilarity(float[] a, float[] b)
-    {
-        float dot = 0, normA = 0, normB = 0;
-        for (int i = 0; i < a.Length; i++)
-        {
-            dot += a[i] * b[i];
-            normA += a[i] * a[i];
-            normB += b[i] * b[i];
-        }
-        return dot / (MathF.Sqrt(normA) * MathF.Sqrt(normB) + 1e-8f);
-    }
-
     private static string ExtractText(string path, string originalFileName)
     {
         var ext = Path.GetExtension(originalFileName).ToLower();
@@ -142,14 +153,10 @@ var topChunks = doc.Chunks
         {
             if (ext == ".txt")
                 return System.IO.File.ReadAllText(path);
-
             if (ext == ".pdf")
             {
-                // Basic PDF text extraction - reads raw bytes and extracts readable text
-                // For production, add UglyToad.PdfPig package and use PdfDocument.Open(path)
                 var bytes = System.IO.File.ReadAllBytes(path);
                 var raw = System.Text.Encoding.UTF8.GetString(bytes);
-                // Extract text between stream markers (works for simple PDFs)
                 var sb = new System.Text.StringBuilder();
                 int i = 0;
                 while (i < raw.Length)
@@ -163,13 +170,8 @@ var topChunks = doc.Chunks
                 }
                 return sb.Length > 50 ? sb.ToString() : raw[..Math.Min(raw.Length, 8000)];
             }
-
-            // .docx: add DocumentFormat.OpenXml package for full support
             return string.Empty;
         }
-        catch
-        {
-            return string.Empty;
-        }
+        catch { return string.Empty; }
     }
 }
