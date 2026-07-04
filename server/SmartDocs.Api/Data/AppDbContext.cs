@@ -11,6 +11,7 @@ public class AppDbContext : IdentityDbContext<AppUser>
     public DbSet<Document> Documents => Set<Document>();
     public DbSet<DocumentChunk> DocumentChunks => Set<DocumentChunk>();
     public DbSet<ChatMessage> ChatMessages => Set<ChatMessage>();
+    public DbSet<Category> Categories => Set<Category>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -20,6 +21,17 @@ public class AppDbContext : IdentityDbContext<AppUser>
             .HasOne(d => d.User)
             .WithMany(u => u.Documents)
             .HasForeignKey(d => d.UserId);
+
+        builder.Entity<Document>()
+            .HasOne(d => d.Category)
+            .WithMany(c => c.Documents)
+            .HasForeignKey(d => d.CategoryId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.Entity<Category>()
+            .HasOne(c => c.User)
+            .WithMany()
+            .HasForeignKey(c => c.UserId);
 
         builder.Entity<DocumentChunk>()
             .HasOne(c => c.Document)
