@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+client/node_modules/
+
+# Build outputs
+client/dist/
+server/SmartDocs.Api/bin/
+server/SmartDocs.Api/obj/
+
+# Uploads
+server/SmartDocs.Api/uploads/
+
+# Environment
+appsettings.json
+appsettings.Development.json
+.env
+
+# OS
+.DS_Store
+Thumbs.db
