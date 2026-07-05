@@ -2,7 +2,7 @@ import axios from 'axios'
 import { useAuthStore } from '../store/authStore'
 
 export const api = axios.create({
-  baseURL: 'http://localhost:5000/api', // match your ASP.NET Core launch port
+  baseURL: 'https://smartdocs-ai-nk0p.onrender.com/api', // match your ASP.NET Core launch port
 })
 
 api.interceptors.request.use((config) => {
@@ -24,7 +24,7 @@ api.interceptors.response.use(
         return Promise.reject(error)
       }
       try {
-        const { data } = await axios.post('http://localhost:5000/api/auth/refresh', {
+        const { data } = await axios.post('https://smartdocs-ai-nk0p.onrender.com/api/auth/refresh', {
           refreshToken,
           email,
         })
