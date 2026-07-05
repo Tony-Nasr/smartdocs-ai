@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: smartdocs-api
+    runtime: docker
+    dockerfilePath: ./server/SmartDocs.Api/Dockerfile
+    plan: free
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
