@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\build\SmartDocs.Api.props" />
-</Project>
