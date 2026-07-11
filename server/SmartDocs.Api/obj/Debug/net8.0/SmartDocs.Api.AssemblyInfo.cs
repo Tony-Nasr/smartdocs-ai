@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SmartDocs.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+38d6f59d92c67ebf67f07dbc57c1799017c43894")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c8d1f2076fac0ba4a0b3d432fa48784592fc6659")]
 [assembly: System.Reflection.AssemblyProductAttribute("SmartDocs.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SmartDocs.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

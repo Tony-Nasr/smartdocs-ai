@@ -1,3 +1,5 @@
+using DocumentFormat.OpenXml.Packaging;
+using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -5,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using SmartDocs.Api.Data;
 using SmartDocs.Api.Models;
 using SmartDocs.Api.Services;
+using UglyToad.PdfPig;
+using UglyToad.PdfPig.Content;
 
 namespace SmartDocs.Api.Controllers;
 
@@ -76,6 +80,8 @@ public class DocumentsController : ControllerBase
             await file.CopyToAsync(stream);
 
         var text = ExtractText(fullPath, file.FileName);
+Console.WriteLine($"DEBUG: ext={Path.GetExtension(file.FileName)}, textLength={text?.Length ?? 0}, text={text?[..Math.Min(200, text?.Length ?? 0)]}");
+
 
         var doc = new Document
         {
@@ -147,31 +153,39 @@ public class DocumentsController : ControllerBase
     }
 
     private static string ExtractText(string path, string originalFileName)
+{
+    var ext = Path.GetExtension(originalFileName).ToLower();
+    try
     {
-        var ext = Path.GetExtension(originalFileName).ToLower();
-        try
+        if (ext == ".txt")
+            return System.IO.File.ReadAllText(path);
+
+        if (ext == ".pdf")
         {
-            if (ext == ".txt")
-                return System.IO.File.ReadAllText(path);
-            if (ext == ".pdf")
-            {
-                var bytes = System.IO.File.ReadAllBytes(path);
-                var raw = System.Text.Encoding.UTF8.GetString(bytes);
-                var sb = new System.Text.StringBuilder();
-                int i = 0;
-                while (i < raw.Length)
-                {
-                    var start = raw.IndexOf("BT", i);
-                    if (start < 0) break;
-                    var end = raw.IndexOf("ET", start);
-                    if (end < 0) break;
-                    sb.Append(raw[start..end]);
-                    i = end + 2;
-                }
-                return sb.Length > 50 ? sb.ToString() : raw[..Math.Min(raw.Length, 8000)];
-            }
-            return string.Empty;
+            var sb = new System.Text.StringBuilder();
+            using var pdf = UglyToad.PdfPig.PdfDocument.Open(path);
+            foreach (var page in pdf.GetPages())
+                sb.AppendLine(string.Join(" ", page.GetWords().Select(w => w.Text)));
+            return sb.ToString();
         }
-        catch { return string.Empty; }
+
+        if (ext == ".docx")
+{
+    var sb = new System.Text.StringBuilder();
+    using var wordDoc = WordprocessingDocument.Open(path, false);
+    var body = wordDoc.MainDocumentPart?.Document?.Body;
+    if (body == null) return "DOCX body is null";
+    foreach (var para in body.Elements<DocumentFormat.OpenXml.Wordprocessing.Paragraph>())
+        sb.AppendLine(para.InnerText);
+    var result = sb.ToString().Trim();
+    return string.IsNullOrEmpty(result) ? "DOCX extracted but empty" : result;
+}
+
+        return string.Empty;
     }
+    catch (Exception ex)
+{
+    return $"Extraction error ({ext}): {ex.Message}";
+}
+}
 }
